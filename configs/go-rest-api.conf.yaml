@@ -1,0 +1,6 @@
+http:
+  host: localhost
+  port: 8080
+db:
+  master: postgres://restapi:password@localhost:5432/restapi?sslmode=disable
+  timeout: 15s

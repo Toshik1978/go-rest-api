@@ -1,0 +1,37 @@
+version: '3.4'
+
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:12.0
+    environment:
+      - POSTGRES_USER=restapi
+      - POSTGRES_PASSWORD=password
+    ports:
+      - 127.0.0.1:5432:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U faceoff"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    network_mode: "bridge"
+
+  restapi:
+    container_name: restapi
+    build: .
+    ports:
+      - 127.0.0.1:8080:8080
+    links:
+      - postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./configs:/opt/go-rest-api/configs
+    network_mode: "bridge"
+
+volumes:
+  postgres:
+    name: restapi_postgres

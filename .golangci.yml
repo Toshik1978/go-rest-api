@@ -1,0 +1,16 @@
+run:
+  tests: true
+  skip-dirs:
+    - mock
+
+linters:
+  enable:
+    - stylecheck
+    - gofmt
+    - goimports
+    - golint
+    - unconvert
+    - goconst
+    - unparam
+    - scopelint
+    - lll
