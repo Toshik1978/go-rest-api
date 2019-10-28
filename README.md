@@ -1,4 +1,6 @@
 # Golang RESTful API example project
+[![Build Status](https://travis-ci.org/Toshik1978/go-rest-api.svg?branch=master)](https://travis-ci.org/Toshik1978/go-rest-api)
+[![Coverage](https://codecov.io/gh/Toshik1978/go-rest-api/branch/master/graph/badge.svg)](https://codecov.io/gh/Toshik1978/go-rest-api)
 
 Project contains some simple Golang application, implemented RESTful service for some abstract financial company.
 
