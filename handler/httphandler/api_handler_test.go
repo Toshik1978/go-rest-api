@@ -1,14 +1,14 @@
 package httphandler
 
 import (
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"time"
 
 	"github.com/Toshik1978/go-rest-api/handler"
-	"github.com/Toshik1978/go-rest-api/service"
+	"github.com/Toshik1978/go-rest-api/service/server"
 	"github.com/golang/mock/gomock"
-	"github.com/pkg/errors"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -45,9 +45,9 @@ type apiHandlerTestSuite struct {
 func (s *apiHandlerTestSuite) TestWriteResponseFailed1() {
 	zapCore, zapRecorded := observer.New(zapcore.InfoLevel)
 
-	apiHandler := newAPIHandler(service.Globals{
+	apiHandler := newAPIHandler(server.Globals{
 		Logger: zap.New(zapCore),
-	})
+	}, nil)
 	apiHandler.writeResponse(newFailResponseWriter(), make(chan struct{}))
 
 	s.Equal(1, zapRecorded.Len())
@@ -57,9 +57,9 @@ func (s *apiHandlerTestSuite) TestWriteResponseFailed1() {
 func (s *apiHandlerTestSuite) TestWriteResponseFailed2() {
 	zapCore, zapRecorded := observer.New(zapcore.InfoLevel)
 
-	apiHandler := newAPIHandler(service.Globals{
+	apiHandler := newAPIHandler(server.Globals{
 		Logger: zap.New(zapCore),
-	})
+	}, nil)
 	apiHandler.writeResponse(newFailResponseWriter(), handler.ServerStatusResponse{})
 
 	s.Equal(1, zapRecorded.Len())
@@ -70,17 +70,17 @@ func (s *apiHandlerTestSuite) TestServerStatusHandlerSucceeded() {
 	ctrl := gomock.NewController(s.T())
 	defer ctrl.Finish()
 
-	req, err := http.NewRequest("GET", "/v1/server/status", nil)
+	req, err := http.NewRequest("GET", "/api/v1/server/status", nil)
 	if err != nil {
 		s.T().Fatal(err)
 	}
 
 	zapCore, zapRecorded := observer.New(zapcore.InfoLevel)
-	apiHandler := newAPIHandler(service.Globals{
+	apiHandler := newAPIHandler(server.Globals{
 		Logger:    zap.New(zapCore),
 		BuildTime: time.Now().String(),
 		Version:   "test",
-	}).ServerStatusHandler()
+	}, nil).ServerStatusHandler()
 
 	r := httptest.NewRecorder()
 	apiHandler.ServeHTTP(r, req)

@@ -8,7 +8,8 @@ import (
 
 // PostgresClient declare interface for PostgreSQL connections
 type PostgresClient interface {
-	Stop()
-
+	// GetConnection retrieve database connection to be used in repositories
 	GetConnection() *sqlx.DB
+	// Stop finish background tasks of this client (db reconnection)
+	Stop()
 }

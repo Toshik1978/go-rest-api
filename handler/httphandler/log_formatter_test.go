@@ -5,7 +5,7 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/Toshik1978/go-rest-api/service"
+	"github.com/Toshik1978/go-rest-api/service/server"
 	"github.com/gorilla/handlers"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/zap"
@@ -25,7 +25,7 @@ func (s *logFormatterTestSuite) TestLogFormatterSucceeded() {
 
 	zapCore, zapRecorded := observer.New(zapcore.InfoLevel)
 
-	lf := newLogFormatter(service.Globals{
+	lf := newLogFormatter(server.Globals{
 		Logger: zap.New(zapCore),
 	})
 

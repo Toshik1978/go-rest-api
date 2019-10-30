@@ -4,9 +4,10 @@ import (
 	"time"
 
 	"github.com/Toshik1978/go-rest-api/service"
+	"github.com/Toshik1978/go-rest-api/service/errutil"
+	"github.com/Toshik1978/go-rest-api/service/server"
 	_ "github.com/jackc/pgx/v4/stdlib" // PostgreSQL driver
 	"github.com/jmoiron/sqlx"
-	"github.com/pkg/errors"
 	"go.uber.org/zap"
 )
 
@@ -26,10 +27,10 @@ type postgresClient struct {
 }
 
 // NewPostgresClient creates new PostgreSQL client
-func NewPostgresClient(logger *zap.Logger, vars service.Vars) (service.PostgresClient, error) {
+func NewPostgresClient(logger *zap.Logger, vars server.Vars) (service.PostgresClient, error) {
 	db, err := sqlx.Connect("pgx", vars.DB+dbSuffix)
 	if err != nil {
-		return nil, errors.Wrap(err, "db initialization failed")
+		return nil, errutil.Wrap(err, "db initialization failed")
 	}
 	initializeConnection(db)
 

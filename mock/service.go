@@ -33,18 +33,6 @@ func (m *MockPostgresClient) EXPECT() *MockPostgresClientMockRecorder {
 	return m.recorder
 }
 
-// Stop mocks base method
-func (m *MockPostgresClient) Stop() {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Stop")
-}
-
-// Stop indicates an expected call of Stop
-func (mr *MockPostgresClientMockRecorder) Stop() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Stop", reflect.TypeOf((*MockPostgresClient)(nil).Stop))
-}
-
 // GetConnection mocks base method
 func (m *MockPostgresClient) GetConnection() *sqlx.DB {
 	m.ctrl.T.Helper()
@@ -57,4 +45,16 @@ func (m *MockPostgresClient) GetConnection() *sqlx.DB {
 func (mr *MockPostgresClientMockRecorder) GetConnection() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetConnection", reflect.TypeOf((*MockPostgresClient)(nil).GetConnection))
+}
+
+// Stop mocks base method
+func (m *MockPostgresClient) Stop() {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "Stop")
+}
+
+// Stop indicates an expected call of Stop
+func (mr *MockPostgresClientMockRecorder) Stop() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Stop", reflect.TypeOf((*MockPostgresClient)(nil).Stop))
 }

@@ -1,7 +1,7 @@
 package httphandler
 
 import (
-	"github.com/Toshik1978/go-rest-api/service"
+	"github.com/Toshik1978/go-rest-api/service/server"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -15,7 +15,7 @@ type recoveryLoggerTestSuite struct {
 func (s *recoveryLoggerTestSuite) TestRecoveryLoggerSucceeded() {
 	zapCore, zapRecorded := observer.New(zapcore.InfoLevel)
 
-	recovery := newRecoveryLogger(service.Globals{
+	recovery := newRecoveryLogger(server.Globals{
 		Logger: zap.New(zapCore),
 	})
 	recovery.Println("panic")

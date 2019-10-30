@@ -5,6 +5,7 @@
 package mock
 
 import (
+	context "context"
 	repository "github.com/Toshik1978/go-rest-api/repository"
 	gomock "github.com/golang/mock/gomock"
 	reflect "reflect"
@@ -33,6 +34,35 @@ func (m *MockAccountRepository) EXPECT() *MockAccountRepositoryMockRecorder {
 	return m.recorder
 }
 
+// GetAll mocks base method
+func (m *MockAccountRepository) GetAll(ctx context.Context) ([]repository.Account, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAll", ctx)
+	ret0, _ := ret[0].([]repository.Account)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAll indicates an expected call of GetAll
+func (mr *MockAccountRepositoryMockRecorder) GetAll(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAll", reflect.TypeOf((*MockAccountRepository)(nil).GetAll), ctx)
+}
+
+// Store mocks base method
+func (m *MockAccountRepository) Store(ctx context.Context, account *repository.Account) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Store", ctx, account)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Store indicates an expected call of Store
+func (mr *MockAccountRepositoryMockRecorder) Store(ctx, account interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Store", reflect.TypeOf((*MockAccountRepository)(nil).Store), ctx, account)
+}
+
 // MockPaymentRepository is a mock of PaymentRepository interface
 type MockPaymentRepository struct {
 	ctrl     *gomock.Controller
@@ -54,6 +84,35 @@ func NewMockPaymentRepository(ctrl *gomock.Controller) *MockPaymentRepository {
 // EXPECT returns an object that allows the caller to indicate expected use
 func (m *MockPaymentRepository) EXPECT() *MockPaymentRepositoryMockRecorder {
 	return m.recorder
+}
+
+// GetAll mocks base method
+func (m *MockPaymentRepository) GetAll(ctx context.Context) ([]repository.Payment, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAll", ctx)
+	ret0, _ := ret[0].([]repository.Payment)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAll indicates an expected call of GetAll
+func (mr *MockPaymentRepositoryMockRecorder) GetAll(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAll", reflect.TypeOf((*MockPaymentRepository)(nil).GetAll), ctx)
+}
+
+// Store mocks base method
+func (m *MockPaymentRepository) Store(ctx context.Context, payment *repository.Payment) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Store", ctx, payment)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Store indicates an expected call of Store
+func (mr *MockPaymentRepositoryMockRecorder) Store(ctx, payment interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Store", reflect.TypeOf((*MockPaymentRepository)(nil).Store), ctx, payment)
 }
 
 // MockFactory is a mock of Factory interface
@@ -79,30 +138,30 @@ func (m *MockFactory) EXPECT() *MockFactoryMockRecorder {
 	return m.recorder
 }
 
-// GetAccountRepository mocks base method
-func (m *MockFactory) GetAccountRepository() repository.AccountRepository {
+// AccountRepository mocks base method
+func (m *MockFactory) AccountRepository() repository.AccountRepository {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetAccountRepository")
+	ret := m.ctrl.Call(m, "AccountRepository")
 	ret0, _ := ret[0].(repository.AccountRepository)
 	return ret0
 }
 
-// GetAccountRepository indicates an expected call of GetAccountRepository
-func (mr *MockFactoryMockRecorder) GetAccountRepository() *gomock.Call {
+// AccountRepository indicates an expected call of AccountRepository
+func (mr *MockFactoryMockRecorder) AccountRepository() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAccountRepository", reflect.TypeOf((*MockFactory)(nil).GetAccountRepository))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AccountRepository", reflect.TypeOf((*MockFactory)(nil).AccountRepository))
 }
 
-// GetPaymentRepository mocks base method
-func (m *MockFactory) GetPaymentRepository() repository.PaymentRepository {
+// PaymentRepository mocks base method
+func (m *MockFactory) PaymentRepository() repository.PaymentRepository {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetPaymentRepository")
+	ret := m.ctrl.Call(m, "PaymentRepository")
 	ret0, _ := ret[0].(repository.PaymentRepository)
 	return ret0
 }
 
-// GetPaymentRepository indicates an expected call of GetPaymentRepository
-func (mr *MockFactoryMockRecorder) GetPaymentRepository() *gomock.Call {
+// PaymentRepository indicates an expected call of PaymentRepository
+func (mr *MockFactoryMockRecorder) PaymentRepository() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPaymentRepository", reflect.TypeOf((*MockFactory)(nil).GetPaymentRepository))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PaymentRepository", reflect.TypeOf((*MockFactory)(nil).PaymentRepository))
 }

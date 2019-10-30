@@ -18,20 +18,6 @@ services:
       - postgres:/var/lib/postgresql/data
     network_mode: "bridge"
 
-  restapi:
-    container_name: restapi
-    build: .
-    ports:
-      - 127.0.0.1:8080:8080
-    links:
-      - postgres
-    depends_on:
-      postgres:
-        condition: service_healthy
-    volumes:
-      - ./configs/go-rest-api.conf.docker.yaml:/opt/go-rest-api/configs/go-rest-api.conf.yaml
-    network_mode: "bridge"
-
 volumes:
   postgres:
     name: restapi_postgres

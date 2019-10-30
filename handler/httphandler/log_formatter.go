@@ -4,7 +4,7 @@ import (
 	"io"
 	"time"
 
-	"github.com/Toshik1978/go-rest-api/service"
+	"github.com/Toshik1978/go-rest-api/service/server"
 	"github.com/gorilla/handlers"
 	"go.uber.org/zap"
 )
@@ -15,7 +15,7 @@ type logFormatter struct {
 }
 
 // newLogFormatter creates new access logger instance and return formatter function
-func newLogFormatter(globals service.Globals) handlers.LogFormatter {
+func newLogFormatter(globals server.Globals) handlers.LogFormatter {
 	return logFormatter{
 		logger: globals.Logger,
 	}.format

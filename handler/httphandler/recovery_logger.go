@@ -1,7 +1,7 @@
 package httphandler
 
 import (
-	"github.com/Toshik1978/go-rest-api/service"
+	"github.com/Toshik1978/go-rest-api/service/server"
 	"github.com/gorilla/handlers"
 	"go.uber.org/zap"
 )
@@ -12,7 +12,7 @@ type recoveryLogger struct {
 }
 
 // newRecoveryLogger creates new RecoveryHandlerLogger instance
-func newRecoveryLogger(globals service.Globals) handlers.RecoveryHandlerLogger {
+func newRecoveryLogger(globals server.Globals) handlers.RecoveryHandlerLogger {
 	return &recoveryLogger{
 		logger: globals.Logger,
 	}

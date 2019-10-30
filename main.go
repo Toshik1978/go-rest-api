@@ -9,10 +9,13 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/Toshik1978/go-rest-api/handler"
+	"github.com/Toshik1978/go-rest-api/handler/account"
 	"github.com/Toshik1978/go-rest-api/handler/httphandler"
 	"github.com/Toshik1978/go-rest-api/repository/repositoryengine"
 	"github.com/Toshik1978/go-rest-api/service"
 	"github.com/Toshik1978/go-rest-api/service/postgres"
+	"github.com/Toshik1978/go-rest-api/service/server"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
@@ -40,11 +43,12 @@ func main() {
 	signal.Notify(interruptCh, syscall.SIGINT, syscall.SIGTERM)
 
 	logger.Info("Start service", zap.String("git_version", GitVersion))
-	vars := service.LoadConfig(logger)
+	vars := server.LoadConfig(logger)
 
 	dbClient := initializeDB(logger, vars)
 	globals := initializeGlobals(logger, dbClient)
-	server := initializeHTTP(vars, globals)
+	accountManager := account.NewAccountManager(globals)
+	server := initializeHTTP(vars, globals, accountManager)
 
 	waitShutdown(interruptCh, logger, dbClient, server)
 }
@@ -64,7 +68,7 @@ func initializeLogger() *zap.Logger {
 }
 
 // initializeDB initializes DB
-func initializeDB(logger *zap.Logger, vars service.Vars) service.PostgresClient {
+func initializeDB(logger *zap.Logger, vars server.Vars) service.PostgresClient {
 	client, err := postgres.NewPostgresClient(logger, vars)
 	if err != nil {
 		logger.Fatal("DB initialization failed", zap.Error(err))
@@ -75,9 +79,9 @@ func initializeDB(logger *zap.Logger, vars service.Vars) service.PostgresClient 
 }
 
 // initializeGlobals initialize globals
-func initializeGlobals(logger *zap.Logger, dbClient service.PostgresClient) service.Globals {
+func initializeGlobals(logger *zap.Logger, dbClient service.PostgresClient) server.Globals {
 	db := dbClient.GetConnection()
-	return service.Globals{
+	return server.Globals{
 		Logger:            logger,
 		RepositoryFactory: repositoryengine.NewRepositoryFactory(db),
 		BuildTime:         BuildTime,
@@ -86,10 +90,10 @@ func initializeGlobals(logger *zap.Logger, dbClient service.PostgresClient) serv
 }
 
 // initializeHTTP initializes HTTP server
-func initializeHTTP(vars service.Vars, globals service.Globals) *http.Server {
+func initializeHTTP(vars server.Vars, globals server.Globals, accountManager handler.AccountManager) *http.Server {
 	server := &http.Server{
 		Addr:    vars.HTTPAddress + ":" + vars.HTTPPort,
-		Handler: httphandler.NewHTTPHandler(globals),
+		Handler: httphandler.NewHTTPHandler(globals, accountManager),
 	}
 
 	go func() {

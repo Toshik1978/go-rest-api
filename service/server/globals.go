@@ -1,4 +1,4 @@
-package service
+package server
 
 import (
 	"github.com/Toshik1978/go-rest-api/repository"

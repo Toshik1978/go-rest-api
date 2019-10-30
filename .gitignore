@@ -156,3 +156,7 @@ Temporary Items
 
 # Code coverage
 coverage.txt
+
+# IDEA
+.idea/**/dataSources.xml
+.idea/**/sqldialects.xml

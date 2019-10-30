@@ -4,13 +4,14 @@ import (
 	"net/http"
 	_ "net/http/pprof" // pprof enable
 
-	"github.com/Toshik1978/go-rest-api/service"
+	"github.com/Toshik1978/go-rest-api/handler"
+	"github.com/Toshik1978/go-rest-api/service/server"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )
 
 // NewHTTPHandler creates new http handler
-func NewHTTPHandler(globals service.Globals) http.Handler {
+func NewHTTPHandler(globals server.Globals, accountManager handler.AccountManager) http.Handler {
 	// Create main router and attach common middlewares
 	r := mux.NewRouter()
 	r.PathPrefix("/debug/pprof/").Handler(http.DefaultServeMux)
@@ -20,15 +21,20 @@ func NewHTTPHandler(globals service.Globals) http.Handler {
 	)
 
 	// API
-	route := r.PathPrefix("/v1").Subrouter()
+	route := r.PathPrefix("/api/v1").Subrouter()
 	route.Use(
 		func(next http.Handler) http.Handler {
 			return handlers.CustomLoggingHandler(nil, next, newLogFormatter(globals))
 		},
 	)
 
-	apiHandler := newAPIHandler(globals)
+	apiHandler := newAPIHandler(globals, accountManager)
 	route.Handle("/server/status", apiHandler.ServerStatusHandler()).Methods("GET")
+
+	route.Handle("/accounts", apiHandler.CreateAccountHandler()).Methods("POST")
+	route.Handle("/accounts", apiHandler.GetAllAccountsHandler()).Methods("GET")
+	route.Handle("/accounts/payments", apiHandler.GetAllPaymentsHandler()).Methods("GET")
+	route.Handle("/accounts/{uid:[a-zA-Z0-9]+}/payments", apiHandler.CreatePaymentHandler()).Methods("POST")
 
 	return r
 }

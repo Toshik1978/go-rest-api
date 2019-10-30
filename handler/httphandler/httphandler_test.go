@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 
-	"github.com/Toshik1978/go-rest-api/service"
+	"github.com/Toshik1978/go-rest-api/service/server"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -41,15 +41,15 @@ type httpHandlerTestSuite struct {
 }
 
 func (s *httpHandlerTestSuite) TestHTTPHandlerSucceeded1() {
-	req, err := http.NewRequest("GET", "/v1/server/status", nil)
+	req, err := http.NewRequest("GET", "/api/v1/server/status", nil)
 	if err != nil {
 		s.T().Fatal(err)
 	}
 
 	zapCore, zapRecorded := observer.New(zapcore.InfoLevel)
-	handler := NewHTTPHandler(service.Globals{
+	handler := NewHTTPHandler(server.Globals{
 		Logger: zap.New(zapCore),
-	})
+	}, nil)
 
 	r := httptest.NewRecorder()
 	handler.ServeHTTP(r, req)
@@ -66,9 +66,9 @@ func (s *httpHandlerTestSuite) TestHTTPHandlerSucceeded2() {
 	}
 
 	zapCore, zapRecorded := observer.New(zapcore.InfoLevel)
-	handler := NewHTTPHandler(service.Globals{
+	handler := NewHTTPHandler(server.Globals{
 		Logger: zap.New(zapCore),
-	})
+	}, nil)
 
 	r := httptest.NewRecorder()
 	handler.ServeHTTP(r, req)
@@ -84,9 +84,9 @@ func (s *httpHandlerTestSuite) TestHTTPHandlerSucceeded3() {
 	}
 
 	zapCore, zapRecorded := observer.New(zapcore.InfoLevel)
-	handler := NewHTTPHandler(service.Globals{
+	handler := NewHTTPHandler(server.Globals{
 		Logger: zap.New(zapCore),
-	})
+	}, nil)
 
 	r := httptest.NewRecorder()
 	handler.ServeHTTP(r, req)
@@ -102,9 +102,9 @@ func (s *httpHandlerTestSuite) TestHTTPHandlerSucceeded4() {
 	}
 
 	zapCore, zapRecorded := observer.New(zapcore.InfoLevel)
-	handler := NewHTTPHandler(service.Globals{
+	handler := NewHTTPHandler(server.Globals{
 		Logger: zap.New(zapCore),
-	})
+	}, nil)
 
 	w := newPanicResponseWriter()
 	handler.ServeHTTP(w, req)
