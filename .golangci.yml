@@ -1,5 +1,4 @@
 run:
-  tests: true
   skip-dirs:
     - mock
 

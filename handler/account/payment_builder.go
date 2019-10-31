@@ -54,34 +54,64 @@ func (b *paymentBuilder) Build(ctx context.Context) (*handler.Payment, error) {
 	}
 	b.payment.CreatedAt = time.Now()
 
-	repositoryContext, err := b.repositoryFactory.Context()
+	scope := b.repositoryFactory.Scope()
+	ctx, err := scope.WithContext(ctx)
 	if err != nil {
-		return nil, errutil.Wrap(err, "failed to create repository context")
+		return nil, errutil.Wrap(err, "failed to start repository scope")
 	}
 	// Here we can defer Cancel operation, because it's safe
-	defer func() { _ = repositoryContext.Cancel() }()
+	defer func() { _ = scope.Cancel(ctx) }()
 
 	// We should create new payment and update balance for accounts
-	if err := b.repositoryFactory.PaymentRepository(repositoryContext).Store(ctx, &b.payment); err != nil {
+	if err := b.storePayment(ctx); err != nil {
 		return nil, handler.WrapError(err, "failed to create payment", handler.ServerError)
 	}
-	if err := b.updateBalance(ctx, repositoryContext); err != nil {
+	if err := b.updateBalance(ctx); err != nil {
 		return nil, handler.WrapError(err, "failed to update balance", handler.ServerError)
 	}
 
-	if err := repositoryContext.Complete(); err != nil {
-		return nil, errutil.Wrap(err, "failed to complete repository context")
+	// Complete scope
+	if err := scope.Complete(ctx); err != nil {
+		return nil, errutil.Wrap(err, "failed to complete repository scope")
 	}
-	return mapRepositoryPayment(b.payment, true), nil
+	return mapRepositoryPayment(b.payment), nil
 }
 
-// updateBalance updates balance for both accounts - payer and recipient
-func (b *paymentBuilder) updateBalance(ctx context.Context, repositoryContext repository.Context) error {
-	repo := b.repositoryFactory.AccountRepository(repositoryContext)
-	if err := repo.IncrementBalance(ctx, b.payment.PayerAccountUID, -b.payment.Amount); err != nil {
+// storePayment store payments in storage
+// For finance purpose is not bad idea to store always 2 transactions per payment:
+// 1. Incoming - payment to recipient with positive amount
+// 2. Outgoing - recipient to payment with negative amount
+// It cause more simple balance calculation operations
+func (b *paymentBuilder) storePayment(ctx context.Context) error {
+	if err := b.repositoryFactory.PaymentRepository().Store(ctx, &b.payment); err != nil {
 		return err
 	}
-	if err := repo.IncrementBalance(ctx, b.payment.RecipientAccountUID, b.payment.Amount); err != nil {
+	if err := b.repositoryFactory.PaymentRepository().Store(ctx, b.reversePayment()); err != nil {
+		return err
+	}
+	return nil
+}
+
+// reversePayment create reverse payment from current payment
+func (b *paymentBuilder) reversePayment() *repository.Payment {
+	payment := b.payment
+	payer := payment.PayerAccountUID
+	payment.PayerAccountUID = payment.RecipientAccountUID
+	payment.RecipientAccountUID = payer
+	payment.Amount = -payment.Amount
+	return &payment
+}
+
+// updateBalance updates balances in storage
+func (b *paymentBuilder) updateBalance(ctx context.Context) error {
+	if err := b.repositoryFactory.AccountRepository().
+		UpdateBalance(ctx, b.payment.PayerAccountUID, -b.payment.Amount); err != nil {
+
+		return err
+	}
+	if err := b.repositoryFactory.AccountRepository().
+		UpdateBalance(ctx, b.payment.RecipientAccountUID, b.payment.Amount); err != nil {
+
 		return err
 	}
 	return nil

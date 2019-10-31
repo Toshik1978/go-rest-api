@@ -31,8 +31,8 @@ func mapRepositoryAccounts(accounts []repository.Account) []handler.Account {
 }
 
 // mapRepositoryPayment maps repository payment model to API
-func mapRepositoryPayment(payment repository.Payment, isOutgoing bool) *handler.Payment {
-	if isOutgoing {
+func mapRepositoryPayment(payment repository.Payment) *handler.Payment {
+	if payment.Amount >= 0 {
 		return &handler.Payment{
 			UID:       payment.PayerAccountUID,
 			SourceUID: nil,
@@ -47,19 +47,16 @@ func mapRepositoryPayment(payment repository.Payment, isOutgoing bool) *handler.
 		SourceUID: pointer.ToString(payment.PayerAccountUID),
 		TargetUID: nil,
 		Direction: incomingPayment,
-		Amount:    float64(payment.Amount) / 100,
+		Amount:    -float64(payment.Amount) / 100,
 		CreatedAt: payment.CreatedAt,
 	}
 }
 
 // mapRepositoryPayments maps repository payment model to API
 func mapRepositoryPayments(payments []repository.Payment) []handler.Payment {
-	// Every payment record should produce two output records - see README.md for details
-
 	results := make([]handler.Payment, 0, len(payments)*2)
 	for _, payment := range payments {
-		results = append(results, *mapRepositoryPayment(payment, true))
-		results = append(results, *mapRepositoryPayment(payment, false))
+		results = append(results, *mapRepositoryPayment(payment))
 	}
 	return results
 }

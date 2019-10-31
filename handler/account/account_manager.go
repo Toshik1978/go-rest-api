@@ -26,7 +26,7 @@ func NewAccountManager(globals server.Globals) handler.AccountManager {
 }
 
 func (m *accountManager) AllAccounts(ctx context.Context) ([]handler.Account, error) {
-	accounts, err := m.repositoryFactory.AccountRepository(nil).GetAll(ctx)
+	accounts, err := m.repositoryFactory.AccountRepository().GetAll(ctx)
 	if err != nil {
 		return nil, errutil.Wrap(err, "failed to get accounts")
 	}
@@ -34,7 +34,7 @@ func (m *accountManager) AllAccounts(ctx context.Context) ([]handler.Account, er
 }
 
 func (m *accountManager) AllPayments(ctx context.Context) ([]handler.Payment, error) {
-	payments, err := m.repositoryFactory.PaymentRepository(nil).GetAll(ctx)
+	payments, err := m.repositoryFactory.PaymentRepository().GetAll(ctx)
 	if err != nil {
 		return nil, errutil.Wrap(err, "failed to get payments")
 	}

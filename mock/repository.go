@@ -63,6 +63,20 @@ func (mr *MockAccountRepositoryMockRecorder) Store(ctx, account interface{}) *go
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Store", reflect.TypeOf((*MockAccountRepository)(nil).Store), ctx, account)
 }
 
+// UpdateBalance mocks base method
+func (m *MockAccountRepository) UpdateBalance(ctx context.Context, uid string, incr int64) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateBalance", ctx, uid, incr)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdateBalance indicates an expected call of UpdateBalance
+func (mr *MockAccountRepositoryMockRecorder) UpdateBalance(ctx, uid, incr interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateBalance", reflect.TypeOf((*MockAccountRepository)(nil).UpdateBalance), ctx, uid, incr)
+}
+
 // MockPaymentRepository is a mock of PaymentRepository interface
 type MockPaymentRepository struct {
 	ctrl     *gomock.Controller
@@ -115,6 +129,72 @@ func (mr *MockPaymentRepositoryMockRecorder) Store(ctx, payment interface{}) *go
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Store", reflect.TypeOf((*MockPaymentRepository)(nil).Store), ctx, payment)
 }
 
+// MockScope is a mock of Scope interface
+type MockScope struct {
+	ctrl     *gomock.Controller
+	recorder *MockScopeMockRecorder
+}
+
+// MockScopeMockRecorder is the mock recorder for MockScope
+type MockScopeMockRecorder struct {
+	mock *MockScope
+}
+
+// NewMockScope creates a new mock instance
+func NewMockScope(ctrl *gomock.Controller) *MockScope {
+	mock := &MockScope{ctrl: ctrl}
+	mock.recorder = &MockScopeMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use
+func (m *MockScope) EXPECT() *MockScopeMockRecorder {
+	return m.recorder
+}
+
+// WithContext mocks base method
+func (m *MockScope) WithContext(ctx context.Context) (context.Context, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "WithContext", ctx)
+	ret0, _ := ret[0].(context.Context)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// WithContext indicates an expected call of WithContext
+func (mr *MockScopeMockRecorder) WithContext(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WithContext", reflect.TypeOf((*MockScope)(nil).WithContext), ctx)
+}
+
+// Complete mocks base method
+func (m *MockScope) Complete(ctx context.Context) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Complete", ctx)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Complete indicates an expected call of Complete
+func (mr *MockScopeMockRecorder) Complete(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Complete", reflect.TypeOf((*MockScope)(nil).Complete), ctx)
+}
+
+// Cancel mocks base method
+func (m *MockScope) Cancel(ctx context.Context) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Cancel", ctx)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Cancel indicates an expected call of Cancel
+func (mr *MockScopeMockRecorder) Cancel(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Cancel", reflect.TypeOf((*MockScope)(nil).Cancel), ctx)
+}
+
 // MockFactory is a mock of Factory interface
 type MockFactory struct {
 	ctrl     *gomock.Controller
@@ -136,6 +216,20 @@ func NewMockFactory(ctrl *gomock.Controller) *MockFactory {
 // EXPECT returns an object that allows the caller to indicate expected use
 func (m *MockFactory) EXPECT() *MockFactoryMockRecorder {
 	return m.recorder
+}
+
+// Scope mocks base method
+func (m *MockFactory) Scope() repository.Scope {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Scope")
+	ret0, _ := ret[0].(repository.Scope)
+	return ret0
+}
+
+// Scope indicates an expected call of Scope
+func (mr *MockFactoryMockRecorder) Scope() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Scope", reflect.TypeOf((*MockFactory)(nil).Scope))
 }
 
 // AccountRepository mocks base method

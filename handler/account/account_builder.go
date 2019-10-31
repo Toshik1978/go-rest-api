@@ -52,7 +52,7 @@ func (b *accountBuilder) Build(ctx context.Context) (*handler.Account, error) {
 		return nil, handler.WrapError(err, "failed to validate account", handler.ClientError)
 	}
 	b.account.CreatedAt = time.Now()
-	if err := b.repositoryFactory.AccountRepository(nil).Store(ctx, &b.account); err != nil {
+	if err := b.repositoryFactory.AccountRepository().Store(ctx, &b.account); err != nil {
 		return nil, handler.WrapError(err, "failed to create account", handler.ServerError)
 	}
 	return mapRepositoryAccount(b.account), nil

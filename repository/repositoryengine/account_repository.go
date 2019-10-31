@@ -7,6 +7,22 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+const (
+	getAllAccountsSQL = `
+		SELECT id, uid, currency, balance, created_at
+		FROM accounts`
+
+	storeAccountSQL = `
+		INSERT INTO accounts
+			(uid, currency, balance, created_at)
+		VALUES
+			(:uid, :currency, :balance, :created_at)`
+	updateBalanceSQL = `
+		UPDATE accounts
+		SET balance = balance + $2
+		WHERE uid = $1`
+)
+
 // accountRepository implements AccountRepository interface
 type accountRepository struct {
 	ext sqlx.Ext
@@ -20,13 +36,26 @@ func newAccountRepository(ext sqlx.Ext) repository.AccountRepository {
 }
 
 func (r *accountRepository) GetAll(ctx context.Context) ([]repository.Account, error) {
-	panic("implement me")
+	var accounts []repository.Account
+	if err := sqlx.Select(sqlxExt(ctx, r.ext), &accounts, getAllAccountsSQL); err != nil {
+		return nil, err
+	}
+	return accounts, nil
 }
 
 func (r *accountRepository) Store(ctx context.Context, account *repository.Account) error {
-	panic("implement me")
+	res, err := sqlx.NamedExec(sqlxExt(ctx, r.ext), storeAccountSQL, account)
+	if err != nil {
+		return err
+	}
+	account.ID, _ = res.LastInsertId()
+	return nil
 }
 
-func (r *accountRepository) IncrementBalance(ctx context.Context, uid string, incr int64) error {
-	panic("implement me")
+func (r *accountRepository) UpdateBalance(ctx context.Context, uid string, incr int64) error {
+	_, err := sqlxExt(ctx, r.ext).Exec(updateBalanceSQL, uid, incr)
+	if err != nil {
+		return err
+	}
+	return nil
 }

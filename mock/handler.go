@@ -77,10 +77,10 @@ func (mr *MockAccountBuilderMockRecorder) SetCurrency(currency interface{}) *gom
 }
 
 // Build mocks base method
-func (m *MockAccountBuilder) Build(ctx context.Context) (handler.Account, error) {
+func (m *MockAccountBuilder) Build(ctx context.Context) (*handler.Account, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Build", ctx)
-	ret0, _ := ret[0].(handler.Account)
+	ret0, _ := ret[0].(*handler.Account)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -157,10 +157,10 @@ func (mr *MockPaymentBuilderMockRecorder) SetRecipient(uid interface{}) *gomock.
 }
 
 // Build mocks base method
-func (m *MockPaymentBuilder) Build(ctx context.Context) (handler.Payment, error) {
+func (m *MockPaymentBuilder) Build(ctx context.Context) (*handler.Payment, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Build", ctx)
-	ret0, _ := ret[0].(handler.Payment)
+	ret0, _ := ret[0].(*handler.Payment)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
