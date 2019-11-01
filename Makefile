@@ -22,16 +22,16 @@ build:
 	@go build -ldflags "-X main.BuildTime=$(BUILD_TIME) -X main.GitVersion=$(GIT_VERSION)"
 
 lint:
-	@golangci-lint run ./...
+	@golangci-lint run ./... --build-tags=test
 
 test: lint
-	@go test ./...
+	@go test ./... -tags=test
 
 test+race: lint
-	@go test ./... -race
+	@go test ./... -race -tags=test
 
 test+ci: lint
-	@go test ./... -coverprofile=coverage.txt -covermode=atomic
+	@go test ./... -coverprofile=coverage.txt -covermode=atomic -tags=test
 
 image:
 	@docker build -t go-rest-api .

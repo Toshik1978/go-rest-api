@@ -3,6 +3,10 @@
 First of all, it's absolutely spherical project in vacuum. Project provided as-is and some architectural decisions can
 be disputable. I'll try to describe some ideas here.
 
+## Restrictions On Server Side
+
+`TBD`
+
 ## Transactions And Repository Pattern
 
 `TBD`
@@ -27,3 +31,7 @@ simple sample project! Let it be!
 ## Pagination In GET Requests
 
 Yeap, we need pagination in actual application ) Page via URL parameters and blah-blah-blah.
+
+## Other
+
+Initialization panics.

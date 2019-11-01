@@ -47,8 +47,9 @@ func (v *Validator) ValidateUID(field string, uid string) *Validator {
 
 // ValidateCurrency validates user's currency
 func (v *Validator) ValidateCurrency(currency string) *Validator {
-	if strings.ToUpper(currency) != usd {
-		v.AddField("currency", currency, usd)
+	upper := strings.ToUpper(currency)
+	if upper != usd {
+		v.AddField("currency", upper, usd)
 	}
 	return v
 }
@@ -56,7 +57,7 @@ func (v *Validator) ValidateCurrency(currency string) *Validator {
 // ValidateBalance validates user's balance
 func (v *Validator) ValidateBalance(balance float64) *Validator {
 	if balance < 0 {
-		v.AddField("balance", fmt.Sprintf("%.2f", balance), "> 0")
+		v.AddField("balance", fmt.Sprintf("%.2f", balance), ">= 0")
 	}
 	return v
 }
@@ -64,7 +65,7 @@ func (v *Validator) ValidateBalance(balance float64) *Validator {
 // ValidateBalance validates payment's amount
 func (v *Validator) ValidateAmount(amount float64) *Validator {
 	if amount < 0 {
-		v.AddField("amount", fmt.Sprintf("%.2f", amount), "> 0")
+		v.AddField("amount", fmt.Sprintf("%.2f", amount), ">= 0")
 	}
 	return v
 }

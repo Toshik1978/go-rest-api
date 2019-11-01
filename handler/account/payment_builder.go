@@ -27,32 +27,34 @@ func newPaymentBuilder(globals server.Globals) handler.PaymentBuilder {
 	return &paymentBuilder{
 		logger:            globals.Logger,
 		repositoryFactory: globals.RepositoryFactory,
+		payment:           repository.Payment{CreatedAt: time.Now()},
+		v:                 validator.NewValidator(),
 	}
 }
 
 func (b *paymentBuilder) SetAmount(amount float64) handler.PaymentBuilder {
 	b.payment.Amount = int64(amount * 100)
-	b.v.ValidateAmount(amount)
 	return b
 }
 
 func (b *paymentBuilder) SetPayer(uid string) handler.PaymentBuilder {
 	b.payment.PayerAccountUID = uid
-	b.v.ValidateUID("payer_uid", uid)
 	return b
 }
 
 func (b *paymentBuilder) SetRecipient(uid string) handler.PaymentBuilder {
 	b.payment.RecipientAccountUID = uid
-	b.v.ValidateUID("recipient_uid", uid)
 	return b
 }
 
 func (b *paymentBuilder) Build(ctx context.Context) (*handler.Payment, error) {
+	b.v.
+		ValidateAmount(float64(b.payment.Amount)/100).
+		ValidateUID("payer_uid", b.payment.PayerAccountUID).
+		ValidateUID("recipient_uid", b.payment.RecipientAccountUID)
 	if err := b.v.Error(); err != nil {
 		return nil, handler.WrapError(err, "failed to validate payment", handler.ClientError)
 	}
-	b.payment.CreatedAt = time.Now()
 
 	scope := b.repositoryFactory.Scope()
 	ctx, err := scope.WithContext(ctx)
@@ -95,10 +97,9 @@ func (b *paymentBuilder) storePayment(ctx context.Context) error {
 // reversePayment create reverse payment from current payment
 func (b *paymentBuilder) reversePayment() *repository.Payment {
 	payment := b.payment
-	payer := payment.PayerAccountUID
-	payment.PayerAccountUID = payment.RecipientAccountUID
-	payment.RecipientAccountUID = payer
-	payment.Amount = -payment.Amount
+	payment.PayerAccountUID = b.payment.RecipientAccountUID
+	payment.RecipientAccountUID = b.payment.PayerAccountUID
+	payment.Amount = -b.payment.Amount
 	return &payment
 }
 

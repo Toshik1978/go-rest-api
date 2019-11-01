@@ -75,6 +75,7 @@ func (h *apiHandler) CreateAccountHandler() http.Handler {
 			return
 		}
 
+		w.WriteHeader(http.StatusCreated)
 		h.writeResponse(w, account)
 	})
 }
@@ -144,6 +145,7 @@ func (h *apiHandler) CreatePaymentHandler() http.Handler {
 			return
 		}
 
+		w.WriteHeader(http.StatusCreated)
 		h.writeResponse(w, payment)
 	})
 }

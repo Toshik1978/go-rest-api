@@ -2,6 +2,7 @@ package account
 
 import (
 	"context"
+	"strings"
 	"time"
 
 	"github.com/Toshik1978/go-rest-api/handler"
@@ -25,33 +26,35 @@ func newAccountBuilder(globals server.Globals) handler.AccountBuilder {
 	return &accountBuilder{
 		logger:            globals.Logger,
 		repositoryFactory: globals.RepositoryFactory,
+		account:           repository.Account{CreatedAt: time.Now()},
 		v:                 validator.NewValidator(),
 	}
 }
 
 func (b *accountBuilder) SetUID(uid string) handler.AccountBuilder {
 	b.account.UID = uid
-	b.v.ValidateUID("uid", uid)
 	return b
 }
 
 func (b *accountBuilder) SetBalance(balance float64) handler.AccountBuilder {
 	b.account.Balance = int64(balance * 100)
-	b.v.ValidateBalance(balance)
 	return b
 }
 
 func (b *accountBuilder) SetCurrency(currency string) handler.AccountBuilder {
-	b.account.Currency = currency
-	b.v.ValidateCurrency(currency)
+	b.account.Currency = strings.ToUpper(currency)
 	return b
 }
 
 func (b *accountBuilder) Build(ctx context.Context) (*handler.Account, error) {
+	b.v.
+		ValidateUID("uid", b.account.UID).
+		ValidateBalance(float64(b.account.Balance) / 100).
+		ValidateCurrency(b.account.Currency)
 	if err := b.v.Error(); err != nil {
 		return nil, handler.WrapError(err, "failed to validate account", handler.ClientError)
 	}
-	b.account.CreatedAt = time.Now()
+
 	if err := b.repositoryFactory.AccountRepository().Store(ctx, &b.account); err != nil {
 		return nil, handler.WrapError(err, "failed to create account", handler.ServerError)
 	}
