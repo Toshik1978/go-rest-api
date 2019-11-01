@@ -236,7 +236,12 @@ func (s *apiHandlerTestSuite) TestCreateAccountHandlerSucceeded() {
 
 	s.Equal(0, zapRecorded.Len())
 	s.Equal(http.StatusCreated, r.Code)
-	s.EqualValues(account, response)
+	s.Condition(
+		func() bool {
+			return account.UID == response.UID &&
+				account.Currency == response.Currency &&
+				account.Balance == response.Balance
+		}, "Actual and expected accounts are different!")
 }
 
 func (s *apiHandlerTestSuite) TestCreatePaymentHandlerNoBodyFailed() {
@@ -520,7 +525,14 @@ func (s *apiHandlerTestSuite) TestCreatePaymentHandlerSucceeded() {
 
 	s.Equal(0, zapRecorded.Len())
 	s.Equal(http.StatusCreated, r.Code)
-	s.EqualValues(payment, response)
+	s.Condition(
+		func() bool {
+			return payment.UID == response.UID &&
+				payment.Amount == response.Amount &&
+				payment.Direction == response.Direction &&
+				testutil.EqualStrings(payment.SourceUID, response.SourceUID) &&
+				testutil.EqualStrings(payment.TargetUID, response.TargetUID)
+		}, "Actual and expected payments are different!")
 }
 
 func (s *apiHandlerTestSuite) TestGetAllAccountsHandlerFailed() {

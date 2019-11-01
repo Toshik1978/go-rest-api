@@ -65,3 +65,13 @@ func PaymentResponse() handler.Payment {
 		CreatedAt: time.Now().Round(time.Millisecond),
 	}
 }
+
+func EqualStrings(s1 *string, s2 *string) bool {
+	if s1 == s2 {
+		return true
+	}
+	if s1 != nil && s2 != nil && *s1 == *s2 {
+		return true
+	}
+	return false
+}
