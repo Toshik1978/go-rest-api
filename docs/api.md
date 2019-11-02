@@ -1,4 +1,4 @@
-*Sample API Description*
+*API Description*
 ----
 
 **Server's Health Check**
@@ -69,7 +69,7 @@
   Account created.
 
   * **Code:** 200 <br />
-    **Content:** `{ "uid": "toshik1978", "currency": "USD", "balance": 100, "created_at": "2009-11-10T23:00:00Z" }`
+    **Content:** `{ "uid": "toshik1978", "currency": "USD", "balance": 100, "created_at": "2019-11-02T20:29:18.76046542Z" }`
  
 * **Error Response:**
 
@@ -119,7 +119,7 @@
   List of all accounts.
 
   * **Code:** 200 <br />
-    **Content:** `[{ "uid": "toshik1978", "currency": "USD", "balance": 100, "created_at": "2009-11-10T23:00:00Z" }]`
+    **Content:** `[{ "uid": "toshik1978", "currency": "USD", "balance": 100, "created_at": "2019-11-02T20:29:18.760465Z" }]`
  
 * **Error Response:**
 
@@ -164,7 +164,7 @@
   Payment created.
 
   * **Code:** 200 <br />
-    **Content:** `{ "account": "toshik1978", "to_account": "toshik1979", "direction": "outgoing", "amount": 100, "created_at": "2009-11-10T23:00:00Z" }`
+    **Content:** `{ "account": "toshik1978", "to_account": "toshik1979", "direction": "outgoing", "amount": 100, "created_at": "2019-11-02T20:30:52.374818264Z" }`
  
 * **Error Response:**
 
@@ -213,8 +213,8 @@
   List of all payments.
 
   * **Code:** 200 <br />
-    **Content:** `[{ "account": "toshik1978", "to_account": "toshik1979", "direction": "outgoing", "amount": 100, "created_at": "2009-11-10T23:00:00Z" },
-                      { "account": "toshik1979", "from_account": "toshik1978", "direction": "incoming", "amount": 100, "created_at": "2009-11-10T23:00:00Z" }]`
+    **Content:** `[{ "account": "toshik1978", "to_account": "toshik1979", "direction": "outgoing", "amount": 100, "created_at": "2019-11-02T20:30:52.374818Z" },
+                      { "account": "toshik1979", "from_account": "toshik1978", "direction": "incoming", "amount": 100, "created_at": "2019-11-02T20:30:52.374818Z" }]`
  
 * **Error Response:**
 

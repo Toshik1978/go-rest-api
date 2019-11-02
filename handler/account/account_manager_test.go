@@ -141,7 +141,13 @@ func (s *accountManagerTestSuite) TestAllPaymentsSucceeded() {
 
 	s.NoError(err)
 	s.Len(payments, 2)
+	s.Equal(s.payments[0].PayerAccountUID, payments[0].UID)
+	s.NotNil(payments[0].TargetUID)
+	s.Equal(s.payments[0].RecipientAccountUID, *payments[0].TargetUID)
 	s.Equal(outgoingPayment, payments[0].Direction)
+	s.Equal(s.payments[1].PayerAccountUID, payments[1].UID)
+	s.NotNil(payments[1].SourceUID)
+	s.Equal(s.payments[1].RecipientAccountUID, *payments[1].SourceUID)
 	s.Equal(incomingPayment, payments[1].Direction)
 	s.Equal(0, zapRecorded.Len())
 }

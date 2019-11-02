@@ -1,4 +1,4 @@
-version: '3.4'
+version: '2.1'
 
 services:
   postgres:
@@ -30,6 +30,7 @@ services:
         condition: service_healthy
     volumes:
       - ./configs/go-rest-api.conf.docker.yaml:/opt/go-rest-api/configs/go-rest-api.conf.yaml
+      - ./configs/migrations:/opt/go-rest-api/migrations
     network_mode: "bridge"
 
 volumes:

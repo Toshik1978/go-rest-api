@@ -43,8 +43,8 @@ func mapRepositoryPayment(payment repository.Payment) *handler.Payment {
 		}
 	}
 	return &handler.Payment{
-		UID:       payment.RecipientAccountUID,
-		SourceUID: pointer.ToString(payment.PayerAccountUID),
+		UID:       payment.PayerAccountUID,
+		SourceUID: pointer.ToString(payment.RecipientAccountUID),
 		TargetUID: nil,
 		Direction: incomingPayment,
 		Amount:    -float64(payment.Amount) / 100,
@@ -54,7 +54,7 @@ func mapRepositoryPayment(payment repository.Payment) *handler.Payment {
 
 // mapRepositoryPayments maps repository payment model to API
 func mapRepositoryPayments(payments []repository.Payment) []handler.Payment {
-	results := make([]handler.Payment, 0, len(payments)*2)
+	results := make([]handler.Payment, 0, len(payments))
 	for _, payment := range payments {
 		results = append(results, *mapRepositoryPayment(payment))
 	}

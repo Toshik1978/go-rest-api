@@ -1,0 +1,11 @@
+version: '2.1'
+
+services:
+  restapi:
+    container_name: restapi
+    image: go-rest-api
+    ports:
+      - 127.0.0.1:8080:8080
+    volumes:
+      - ./configs/go-rest-api.conf.production.yaml:/opt/go-rest-api/configs/go-rest-api.conf.yaml
+    network_mode: "bridge"

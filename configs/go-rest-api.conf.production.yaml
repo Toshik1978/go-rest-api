@@ -1,0 +1,6 @@
+http:
+  host: 0.0.0.0
+  port: 8080
+db:
+  master: postgres://restapi:password@host.docker.internal:5432/restapi?sslmode=disable
+  timeout: 15s

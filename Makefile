@@ -2,7 +2,7 @@ GOPATH		= $(shell go env GOPATH)
 BUILD_TIME	= $(shell date +"%Y%m%d.%H%M%S")
 GIT_VERSION	= $(shell git rev-list -1 HEAD)
 
-.PHONY: all modules prereq mock build lint test test+race test+ci image clean
+.PHONY: all modules prereq mock build lint test test+race test+ci docker clean
 .DEFAULT_GOAL := all
 
 all: test build
@@ -33,8 +33,8 @@ test+race: lint
 test+ci: lint
 	@go test ./... -coverprofile=coverage.txt -covermode=atomic -tags=test
 
-image:
-	@docker build -t go-rest-api .
+docker:
+	@docker build -f Dockerfile.production -t go-rest-api .
 
 clean:
 	@go clean
